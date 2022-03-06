@@ -30,4 +30,22 @@ actor {
     public func is_even(n : Nat): async Bool {
         return n % 2 == 0;
     };
+
+    public func sum_of_array(array : [Nat]): async Nat {
+        var sum : Nat = 0;
+        for (value in array.vals()) {
+            sum := sum + value;
+        };
+        return sum;
+    };
+
+    public func maximum(array : [Nat]): async Nat {
+        var max : Nat = 0;
+        for (value in array.vals()) {
+            if (value > max) {
+                max := value;
+            }
+        };
+        return max;
+    };
 };
