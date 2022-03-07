@@ -1,6 +1,9 @@
 import NatBase "mo:base/Nat";
 import Nat8Base "mo:base/Nat8";
 import CharBase "mo:base/Char";
+import IterBase "mo:base/Iter";
+import TextBase "mo:base/Text";
+import ArrayBase "mo:base/Array";
 
 actor {
     public func nat_to_nat8(n : Nat) : async Nat8 {
@@ -47,6 +50,42 @@ actor {
             if (c2 == c) return true;
         };
         return false;
+    };
+
+    public func trim_whitespace(t : Text) : async Text {
+        let whitespaceCharsAsNat32: [Nat32] = [9, 10, 11, 12, 13, 32, 133, 160];
+        let whitespaceChars: [Char] = ArrayBase.map(whitespaceCharsAsNat32, CharBase.fromNat32);
+        let charArray = IterBase.toArray(t.chars());
+        let isNotWhitespace: Char -> Bool = (func(x: Char): Bool { return ArrayBase.find<Char>(whitespaceChars, func(y: Char): Bool { return y == x }) == null });
+        let filteredCharArray = ArrayBase.filter(charArray, isNotWhitespace);
+        return TextBase.fromIter(IterBase.fromArray(filteredCharArray));
+    };
+
+    public func duplicated_character(t : Text) : async Text {
+        var partialText: Text = "";
+        for (c in t.chars()) {
+            if (await is_inside(partialText, c)) return CharBase.toText(c);
+            partialText := partialText # CharBase.toText(c);
+        };
+        return t;
+    };
+
+    public func size_in_bytes(t : Text) : async Nat {
+        return t.size() * 32 / 8;
+    };
+
+    public func bubble_sort(array : [Nat]) : async [Nat] {
+        let mutableArray: [var Nat] = ArrayBase.thaw(array);
+        for (i in IterBase.range(0, array.size()-1)) {
+            for (j in IterBase.range(0, array.size()-2)) {
+                if (mutableArray[j] > mutableArray[j+1]) {
+                    let aux = mutableArray[j];
+                    mutableArray[j] := mutableArray[j+1];
+                    mutableArray[j+1] := aux;
+                }
+            };
+        };
+        return ArrayBase.freeze(mutableArray);
     };
 
     private func _capitalize_character(c : Char) : Char {
