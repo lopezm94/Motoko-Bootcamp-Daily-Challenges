@@ -29,4 +29,61 @@ actor {
             "Seven not found";
         }
     };
+
+    public func nat_opt_to_nat(n: ?Nat, m: Nat) : async Nat {
+        return switch(n) {
+            case(null) {
+                m;
+            }; case(?n) {
+                n;
+            }
+        }
+    };
+
+    public func day_of_the_week(n: Nat) : async ?Text {
+        return switch(n) {
+            case(1) {
+                ?"Monday";
+            }; case(2) {
+                ?"Tuesday";
+            }; case(3) {
+                ?"Wednesday";
+            }; case(4) {
+                ?"Thursday";
+            }; case(5) {
+                ?"Friday";
+            }; case(6) {
+                ?"Saturday";
+            }; case(7) {
+                ?"Sunday";
+            }; case(_) {
+                null;
+            }
+        }
+    };
+
+    public func populate_array(array: [?Nat]) : async [Nat] {
+        return ArrayBase.map<?Nat, Nat>(array, func(x: ?Nat): Nat {
+            return switch(x) {
+                case(null) {
+                    0;
+                }; case(?x) {
+                    x;
+                }
+            }
+        });
+    };
+
+    public func sum_of_array(array: [Nat]) : async Nat {
+        return ArrayBase.foldRight<Nat, Nat>(array, 0, func(x, y) {return x + y;});
+    };
+
+    public func squared_array(array: [Nat]) : async [Nat] {
+        return ArrayBase.map<Nat, Nat>(array, func(x) {return x*x;});
+    };
+
+    public func increase_by_index(array: [Nat]) : async [Nat] {
+        return ArrayBase.mapEntries<Nat, Nat>(array, func(x, i) {return x + i;});
+    };
+
 };
