@@ -3,19 +3,6 @@
     "day_3": {
       "main": "src/day_3/main.mo",
       "type": "motoko"
-    },
-    "day_3_assets": {
-      "dependencies": [
-        "day_3"
-      ],
-      "frontend": {
-        "entrypoint": "src/day_3_assets/src/index.html"
-      },
-      "source": [
-        "src/day_3_assets/assets",
-        "dist/day_3_assets/"
-      ],
-      "type": "assets"
     }
   },
   "defaults": {
