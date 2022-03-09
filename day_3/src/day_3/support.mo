@@ -80,9 +80,15 @@ module {
         return ArrayBase.mapEntries<Nat, Nat>(array, func(x, i) {return x + i;});
     };
 
-    public func contains<A>(array: [A], a: A, f: (A,A) -> Bool) : ?A {
+    public func contains<A>(array: [A], a: A, f: (A,A) -> Bool) : Bool {
         let g: A -> Bool = func(x: A): Bool {return f(a,x);};
         let elementFound: ?A = ArrayBase.find<A>(array, g);
-        return elementFound;
+        return switch(elementFound) {
+            case(null) {
+                false;
+            }; case(?elementFound) {
+                true;
+            }
+        };
     };
 };
