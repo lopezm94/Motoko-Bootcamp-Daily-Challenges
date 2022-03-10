@@ -24,4 +24,12 @@ actor {
     public shared({caller}) func show_favorite_number() : async ?Nat {
         return favoriteNumber.get(caller);
     };
+
+    public shared({caller}) func update_favorite_number(n: Nat) {
+        favoriteNumber.put(caller, n);
+    };
+
+    public shared({caller}) func delete_favorite_number() {
+        let a = favoriteNumber.remove(caller);
+    }
 };
