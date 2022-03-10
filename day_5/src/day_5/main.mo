@@ -1,10 +1,15 @@
+import DebugBase "mo:base/Debug";
+import NatBase "mo:base/Nat";
 import PrincipalBase "mo:base/Principal";
 import CyclesBase "mo:base/ExperimentalCycles";
 import HashMapBase "mo:base/HashMap";
 
 actor {
-
     let favoriteNumber = HashMapBase.HashMap<Principal, Nat>(0, PrincipalBase.equal, PrincipalBase.hash);
+
+    public func get_balance() : async Nat {
+        return CyclesBase.balance();
+    };
 
     public shared({caller}) func is_anonymous() : async Bool {
         return caller == PrincipalBase.fromText("2vxsx-fae");
@@ -34,9 +39,16 @@ actor {
         ignore favoriteNumber.remove(caller);
     };
 
-    let AMOUNT_TO_PAY : Nat = 100_000;
     public func deposit_cycles() : async Nat {
         let received = CyclesBase.accept(CyclesBase.available());
+        DebugBase.print("Main canister received " # NatBase.toText(received) # " cycles.");
         return received;
+    };
+
+    public shared({caller}) func withdraw_cycles(n: Nat) {
+        let callerActor: actor { deposit_cycles : (Nat) -> async Nat } = actor(PrincipalBase.toText(caller));
+        CyclesBase.add(n);
+        let withdrawn = await callerActor.deposit_cycles(n);
+        DebugBase.print("Main canister withdrew " # NatBase.toText(withdrawn) # " cycles.")
     };
 };

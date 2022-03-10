@@ -1,7 +1,14 @@
 {
   "canisters": {
-    "day_5": {
+    "day_5_main": {
       "main": "src/day_5/main.mo",
+      "type": "motoko"
+    },
+    "day_5_withdrawer": {
+      "dependencies": [
+        "day_5_main"
+      ],
+      "main": "src/day_5/withdrawer.mo",
       "type": "motoko"
     }
   },
