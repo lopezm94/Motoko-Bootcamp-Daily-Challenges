@@ -31,7 +31,7 @@ actor {
     };
 
     public shared({caller}) func delete_favorite_number() {
-        let a = favoriteNumber.remove(caller);
+        ignore favoriteNumber.remove(caller);
     };
 
     let AMOUNT_TO_PAY : Nat = 100_000;
