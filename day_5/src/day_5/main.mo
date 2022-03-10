@@ -1,4 +1,5 @@
 import PrincipalBase "mo:base/Principal";
+import CyclesBase "mo:base/ExperimentalCycles";
 import HashMapBase "mo:base/HashMap";
 
 actor {
@@ -31,5 +32,11 @@ actor {
 
     public shared({caller}) func delete_favorite_number() {
         let a = favoriteNumber.remove(caller);
-    }
+    };
+
+    let AMOUNT_TO_PAY : Nat = 100_000;
+    public func deposit_cycles() : async Nat {
+        let received = CyclesBase.accept(CyclesBase.available());
+        return received;
+    };
 };
