@@ -1,5 +1,9 @@
 {
   "canisters": {
+    "day_5_favorite": {
+      "main": "src/day_5/favorite.mo",
+      "type": "motoko"
+    },
     "day_5_main": {
       "main": "src/day_5/main.mo",
       "type": "motoko"

@@ -5,6 +5,9 @@ import CyclesBase "mo:base/ExperimentalCycles";
 import HashMapBase "mo:base/HashMap";
 
 actor {
+    stable var counter : Nat = 0;
+    stable var version_number : Nat = 0;
+
     let favoriteNumber = HashMapBase.HashMap<Principal, Nat>(0, PrincipalBase.equal, PrincipalBase.hash);
 
     public func get_balance() : async Nat {
@@ -50,5 +53,22 @@ actor {
         CyclesBase.add(n);
         let withdrawn = await callerActor.deposit_cycles(n);
         DebugBase.print("Main canister withdrew " # NatBase.toText(withdrawn) # " cycles.")
+    };
+
+    public func get_version_upgrade_number() : async Nat {
+        return version_number;
+    };
+
+    public func get_counter() : async Nat {
+        return counter;
+    };
+
+    public func increment_counter(n : Nat) : async Nat {
+        counter := counter + n;
+        return counter;
+    };
+
+    system func postupgrade() {
+        version_number += 1;
     };
 };
