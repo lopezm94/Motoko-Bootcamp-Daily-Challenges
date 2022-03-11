@@ -1,21 +1,15 @@
 {
   "canisters": {
-    "day_6": {
+    "day_6_main": {
       "main": "src/day_6/main.mo",
       "type": "motoko"
     },
-    "day_6_assets": {
+    "day_6_minter": {
       "dependencies": [
-        "day_6"
+        "day_6_main"
       ],
-      "frontend": {
-        "entrypoint": "src/day_6_assets/src/index.html"
-      },
-      "source": [
-        "src/day_6_assets/assets",
-        "dist/day_6_assets/"
-      ],
-      "type": "assets"
+      "main": "src/day_6/minter.mo",
+      "type": "motoko"
     }
   },
   "defaults": {

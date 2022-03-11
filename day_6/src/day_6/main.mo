@@ -1,4 +1,5 @@
 import HTTP "http";
+import ErrorCustom "error";
 import NatBase "mo:base/Nat";
 import TextBase "mo:base/Text";
 import HashBase "mo:base/Hash";
@@ -10,18 +11,15 @@ import PrincipalBase "mo:base/Principal";
 
 actor {
     public type TokenIndex = Nat;
-    public type Error = {
-        #internal_error;
-        #not_found;
-        #unauthorized;
-    };
+
+    stable var entries: [(TokenIndex, Principal)] = [];
 
     let anonymousPrincipal = PrincipalBase.fromText("2vxsx-fae");
 
-    var nextTokenIndex: TokenIndex = 0;
-    let registry = HashMapBase.HashMap<TokenIndex, Principal>(0, NatBase.equal, HashBase.hash);
+    stable var nextTokenIndex: TokenIndex = 0;
+    let registry = HashMapBase.fromIter<TokenIndex, Principal>(entries.vals(), entries.size(), NatBase.equal, HashBase.hash);
 
-    public shared({caller}) func mint(): async ResultBase.Result<(), Error> {
+    public shared({caller}) func mint(): async ResultBase.Result<(), ErrorCustom.Error> {
         return if (caller == anonymousPrincipal) {
             #err(#unauthorized);
         } else {
@@ -31,7 +29,7 @@ actor {
         }
     };
 
-    public shared({caller}) func transfer(to: Principal, tokenIndex: Nat): async ResultBase.Result<(), Error> {
+    public shared({caller}) func transfer(to: Principal, tokenIndex: Nat): async ResultBase.Result<(), ErrorCustom.Error> {
         let currentOwner = registry.get(tokenIndex);
         return switch(currentOwner) {
             case(null) {
@@ -91,5 +89,13 @@ actor {
                 return(response);
             }
         }
+    };
+
+    system func preupgrade() {
+        entries := IterBase.toArray(registry.entries());
+    };
+
+    system func postupgrade() {
+        entries := [];
     };
 };
